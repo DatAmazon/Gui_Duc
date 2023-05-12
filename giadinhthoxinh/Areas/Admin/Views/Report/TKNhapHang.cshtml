@@ -1,0 +1,93 @@
+﻿
+@{ ViewBag.Title = "TKNhapHang";
+                Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; }
+@model IEnumerable<giadinhthoxinh.Models.tblCheckinDetail>
+@section naviheader{
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+    </ul>
+}
+
+<section class="content-header p-2">
+</section>
+
+<section class="content ml-2 mr-2">
+    <div class="card">
+        @using (Html.BeginForm("TkNhapHang", "Report", FormMethod.Post))
+        {
+            <div class="card-body" style="display: flex;">
+                từ <span><input class="form-control" name="dtReviewTime_from" value="@Html.Raw(DateTime.Now.ToString("yyyy-MM-dd HH:mm").Replace(' ', 'T'))" type="datetime-local" style="width: 250px; margin: auto 10px;" /></span>
+                đến <span><input class="form-control" name="dtReviewTime_to" value="@Html.Raw(DateTime.Now.ToString("yyyy-MM-dd HH:mm").Replace(' ','T'))" type="datetime-local" style="width: 250px; margin: auto 10px;" /></span>
+                <span><input type="submit" value="Thống kê" /></span>
+            </div>
+        }
+
+        <div class="card-header">
+            <h1 class="card-title text-lg text-danger">Thống kê nhập hàng</h1>
+
+
+        </div>
+
+        <div class="card-body table-responsive text-nowrap" style="overflow: scroll; height: 600px;">
+            <table class="table table-hover table-striped ">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>
+                            Mã phiếu nhập
+                        </th>
+                        <th>
+                            Các sản phẩm nhập
+                        </th>
+                        <th>
+                            Ngày nhập
+                        </th>
+                        <th>
+                            Trạng thái
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.listImport)
+                    {
+                        <tr>
+                            <td>
+                                @item.PK_iImportOrderID
+                            </td>
+                            <td>
+                                @foreach (var it in ViewBag.checkindetail)
+                                {
+                                    if (@it.FK_iImportOrderID == @item.PK_iImportOrderID)
+                                    {
+                                        foreach (var product in ViewBag.product)
+                                        {
+                                            if (@product.PK_iProductID == @it.FK_iProductID)
+                                            {
+                                                <p>@product.sProductName</p>
+                                            }
+                                        }
+                                    }
+                                }
+
+
+                            </td>
+
+                            <td>
+                                @item.dtDateAdded
+                            </td>
+                            <td>
+                                @item.iState
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </div>
+</section>
+

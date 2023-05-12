@@ -1,0 +1,212 @@
+﻿
+@{ ViewBag.Title = "Trang chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml"; }
+@using PagedList.Mvc
+@model  PagedList.IPagedList<giadinhthoxinh.Models.tblProduct>
+
+@*<div class="main_slider">
+
+    </div>*@
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$('#cate_ul li').click(function () {
+        //    var id = $(this).attr("value");
+        //    if (id == -465)
+        //        id = null;
+        //    var a = '/Home/Index' + '?cate_id=' + id;
+        //    $.ajax({
+        //        url: a,
+        //        data: { 'cate_id': id, 'page': 1},
+        //        type: "get",
+        //        cache: false,
+        //        success: function (result) {
+        //            //location.reload();
+        //        },
+        //        error: function (xhr, ajaxOptions, thrownError) {
+        //          //  $('#lblThongbao').text("Error ");
+        //            console.log('err');
+        //        }
+        //    });
+        //});
+
+                $('#cate_ul li').click(function () {
+            var id = $(this).attr("value");
+            if (id == -465)
+                id = null;
+            var a = '/Home/Index' + '?cate_id=' + id;
+            window.location.href = '@Url.Action("Index", "Home")?cate_id=' + id;
+        });
+    });
+</script>
+<style>
+    .cate_class {
+    }
+</style>
+@*tôi tự viết thôi, k ảnh hưởng gì*@
+<div class="new_arrivals">
+    <div class="container">
+        <div class="row">
+            <div class="col text-center">
+                <div class="section_title new_arrivals_title">
+                    <h2>Sản phẩm đẹp</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row align-items-center">
+            <div class="col text-center">
+                <div class="new_arrivals_sorting">
+                    <ul id="cate_ul" class="arrivals_grid_sorting clearfix button-group filters-button-group">
+                        @*<li value="-465" class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center active is-checked" data-filter="*">Tất cả</li>
+                            @{
+                                giadinhthoxinh.Models.giadinhthoxinhEntities1 db = new giadinhthoxinh.Models.giadinhthoxinhEntities1();
+                                var categories = db.tblCategories.ToList();
+                                foreach (var cate in categories)
+                                {
+                                    <li class="cate_class grid_sorting_button button d-flex flex-column justify-content-center align-items-center" value="@cate.PK_iCategoryID" data-filter=".filter_@cate.PK_iCategoryID">@cate.sCategoryName</li>
+                                }
+
+                            }*@
+                        @if (ViewBag.cate_id == null)
+                        {
+            <li value="-465" class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center active is-checked" data-filter="*">Tất cả</li>
+ }
+        else
+        {
+<li value="-465" class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center" data-filter="*">Tất cả</li>
+}
+                        @{ giadinhthoxinh.Models.giadinhthoxinhEntities1 db = new giadinhthoxinh.Models.giadinhthoxinhEntities1();
+                            var categories = db.tblCategories.ToList();
+                            foreach (var cate in categories)
+                            {
+                                if (ViewBag.cate_id != cate.PK_iCategoryID)
+                                {
+                <li class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center " value="@cate.PK_iCategoryID">@cate.sCategoryName</li>
+ }
+            else
+            {
+<li class="grid_sorting_button button d-flex flex-column justify-content-center align-items-center active is-checked" value="@cate.PK_iCategoryID">@cate.sCategoryName</li>
+ }
+} }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="product-grid" data-isotope='{ "itemSelector": ".product-item", "layoutMode": "fitRows" }'>
+
+                    @foreach (var item in Model)
+                    {
+                        int priceVirtual = (int)item.fPrice + 35000;
+                        var f = "filter_" + item.FK_iCategoryID;
+        <div class="product-item men @f">
+            <div class="product discount product_filter">
+                <div class="product_image">
+                    <a href="/home/productdetail?id=@item.PK_iProductID"><img src="@Url.Content(item.sImage)" /></a>
+                </div>
+                @*<div class="favorite"></div>*@
+                @*<div class="product_bubble product_bubble_right product_bubble_red d-flex flex-column align-items-center"><span>-$20</span></div>
+                    <div class="product_bubble product_bubble_left product_bubble_green d-flex flex-column align-items-center"><span>new</span></div>*@
+                <div class="product_info">
+                    <h6 class="product_name"><a href="single.html">@item.sProductName</a></h6>
+                    <div class="product_price">@string.Format("{0:#,0}", item.fPrice)₫ <span>@string.Format("{0:#,0}", priceVirtual)₫</span></div>
+                    @*<div class="product_price">@item.fPrice</div>*@
+
+                </div>
+            </div>
+            <div class="red_button add_to_cart_button"><a href="/home/productdetail?id=@item.PK_iProductID">Xem chi tiết</a></div>
+        </div>}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Phân trang*@
+
+<div class="mt-4" style="text-align: center;">
+    @if (ViewBag.cate_id == null)
+    {
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }));
+}
+else
+{
+@Html.PagedListPager(Model, page => Url.Action("Index", new { cate_id = ViewBag.cate_id, page = page }));
+}
+
+</div>
+
+<!-- Best Sellers -->
+
+<div class="best_sellers">
+    <div class="container mb-3">
+        <div class="row">
+            <div class="col text-center">
+                <div class="section_title new_arrivals_title" style="margin-top: 0">
+                    <h2>Có thể bạn cũng thích</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="product_slider_container">
+                    <div class="owl-carousel owl-theme product_slider" style="overflow: hidden; height: 360px;">
+
+                        @*@foreach (var item in Model)*@
+                        @foreach (var item in Model.OrderBy(x => Guid.NewGuid()))
+                        {
+                            int priceVirtual = (int)item.fPrice + 35000;
+            <div class="owl-item product_slider_item">
+                <div class="product-item women">
+                    <div class="product">
+                        <div class="product_image">
+                            @*<img src="~/Content/assets/images/thu_bong/meo_1_5.jpg" alt="">*@
+                            <a href="/home/productdetail?id=@item.PK_iProductID"><img src="@Url.Content(item.sImage)" /></a>
+                        </div>
+                        <div class="favorite"></div>
+                        @*<div class="product_bubble product_bubble_left product_bubble_green d-flex flex-column align-items-center"><span>new</span></div>*@
+                        <div class="product_info">
+                            <h6 class="product_name"><a href="single.html">@item.sProductName</a></h6>
+                            <div class="product_price">@string.Format("{0:#,0}", item.fPrice)₫ <span>@string.Format("{0:#,0}", priceVirtual)₫</span></div>
+                            @*<div class="product_price">@item.fPrice</div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>}
+                    </div>
+
+                    <!-- Slider Navigation -->
+
+                    <div class="product_slider_nav_left product_slider_nav d-flex align-items-center justify-content-center flex-column">
+                        <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                    </div>
+                    <div class="product_slider_nav_right product_slider_nav d-flex align-items-center justify-content-center flex-column">
+                        <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

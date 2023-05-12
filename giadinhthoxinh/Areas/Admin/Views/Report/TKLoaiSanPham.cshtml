@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "TKLoaiSanPham";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<section class="content-header p-2">
+</section>
+
+<section class="content ml-2 mr-2">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title text-lg text-danger">Thống kê sản phẩm</h1>
+
+
+        </div>
+
+        <div class="card-body table-responsive text-nowrap" style="overflow: scroll; height: 80vh;">
+            <table class="table table-hover table-striped ">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>
+                            Sản phẩm
+                        </th>
+                        <th>
+                            Đã bán
+                        </th>
+
+                        <th>
+                            Còn lại
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.MyList)
+                    {
+        <tr>
+            <td>
+                @item.name
+            </td>
+            <td>
+                @item.sell_out
+            </td>
+
+            <td>
+                @item.avaiable
+            </td>
+
+        </tr>}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">
+
+        </div>
+    </div>
+</section>
+
+

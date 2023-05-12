@@ -1,0 +1,42 @@
+﻿<div class="card-body table-responsive text-nowrap" style="overflow: scroll; height: 80vh;">
+    <table class="table table-hover table-striped ">
+        <thead class="thead-dark">
+            <tr>
+                <th>
+                    Mã đơn hàng
+                </th>
+                <th>
+                    Ngày tạo đơn
+                </th>
+                <th>
+                    Trạng thái đơn hàng
+                </th>
+                <th>
+                    Tổng tiền
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ViewBag.MyList)
+            {
+                <tr>
+                    <td>
+                        @item.PK_iOrderID
+                    </td>
+                    <td>
+                        @item.dInvoidDate
+                    </td>
+                    <td>
+                        @item.sState
+                    </td>
+                    <td>
+                        @item.iTotal
+                    </td>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
